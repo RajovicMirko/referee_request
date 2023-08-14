@@ -42,7 +42,7 @@ const schema = object().shape({
     away: teamParentSchema,
     field: string().required(),
     numberOfReferees: number().required(),
-    comment: string().required(),
+    comment: string().optional(),
   }),
   personalData: object().shape({
     discountCode: string().optional().nullable(),

@@ -1,61 +1,65 @@
 const en = {
-  error: {
-    yup: {
-      required: "This is required field",
-      email: "This is not valid email",
+  messages: {
+    error: {
+      yup: {
+        required: "This is required field",
+        email: "This is not valid email",
+      },
+      api: {
+        default: "Something went wrong",
+        403: "Something went wrong",
+        400: "Something is wrong, please check your data",
+      },
     },
   },
   translation: {
     actions: {
       submit: "Submit",
     },
-    field: {
-      team: "Team",
-      club: "Club",
-      selectPlaceholder: {
-        makeAChoice: "Make a Choice",
-        date: "Select Date",
-        team: "Select Team",
-        club: "Select Club",
-      },
-      field: {
-        main: "Field",
-      },
+    global: {
+      personalData: "Personal Data",
+      matchData: "Match Data",
       price: {
         main: "Price",
         text: "{{sign}} {{netPrice}} excluding VAT. {{sign}} {{grossPrice}} including VAT.",
       },
+    },
+    field: {
+      placeholder: {
+        club: "Select Club",
+        team: "Select Team",
+        date: {
+          selectDateTime: "Select Date And Time",
+        },
+      },
+      name: {
+        main: "Name",
+        full: "Full Name",
+      },
+      email: {
+        main: "Email",
+      },
+      phone: {
+        main: "Phone number",
+      },
+      clubAndTeam: {
+        your: "Your Club And Team",
+        home: "Home Club And Team",
+        away: "Away Club And Team",
+      },
+      date: {
+        match: {
+          start: "Match Start Time",
+        },
+      },
+      field: {
+        main: "Field",
+      },
       referee: {
-        numberOfWhistlers: "Number of whistlers",
-        plural_one: "Referee",
-        plural_other: "Referees",
+        numberOfReferees: "Number Of Referees",
         plural_counter_one: "{{count}} Referee",
         plural_counter_other: "{{count}} Referees",
       },
-      match: {
-        main: "Match start time",
-        dateAndTime: "Date And Match Start Time",
-      },
-      gentlemen: {
-        main: "Gentlemen",
-      },
-      ladies: {
-        main: "Ladies",
-      },
-      whistleRules: {
-        main: "Team to whistle. Please note, fill in the teams that must be whistled below. Not your own game.",
-      },
-      clubAndTeam: {
-        main: "Own Club And Team",
-        club: "Own Club",
-        team: "Own Team",
-      },
-      name: {
-        first: "First Name",
-        last: "Last Name",
-      },
-      email: "Email",
-      mobile: "Mobile number",
       comments: "Comments",
     },
     refereeRequest: {
@@ -72,7 +76,7 @@ const en = {
         "After filling out the form, you will immediately have the option to pay via iDeal. Once we receive the payment, we will start processing your request.",
     },
     refereeRequestSuccess: {
-      test: "Referee request successful translation",
+      test: "Referee request successful",
     },
   },
 };

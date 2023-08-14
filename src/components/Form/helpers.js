@@ -5,9 +5,7 @@ export const getErrorsByName = (errors, name) => {
   const errorsObj = get(errors, name);
 
   if (errorsObj) {
-    return i18next.t(errorsObj.message, {
-      ns: "error",
-    });
+    return i18next.t(errorsObj.message);
   }
 
   return "";

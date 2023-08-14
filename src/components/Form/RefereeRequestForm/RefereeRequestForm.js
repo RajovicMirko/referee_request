@@ -1,10 +1,14 @@
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { useEffect } from "react";
+import { toast } from "react-toastify";
+import LoadingButton from "src/components/LoadingButton/LoadingButton";
 import useFetcher from "src/hooks/useFetcher";
+import useMutation from "src/hooks/useMutations";
 import { getClubs } from "src/services/club";
+import { setPreorder } from "src/services/order";
 import { getClubTeams } from "src/services/team";
 import DatePicker from "../components/DatePicker/DatePicker";
 import Form from "../components/Form/Form";
@@ -13,12 +17,11 @@ import FormRow from "../components/FormRow/FormRow";
 import Input from "../components/Input/Input";
 import Radio from "../components/Radio/Radio";
 import Select from "../components/Select/Select";
-import { refereeRequestFormSchemaResolver } from "./refereeRequestForm.config";
-
-const formDefaultValues = {
-  referee: { count: 1 },
-  team: { type: "gentlemen" },
-};
+import { getRefereePrices } from "./constants";
+import {
+  FORM_DEFAULT_VALUES,
+  refereeRequestFormSchemaResolver,
+} from "./refereeRequestForm.config";
 
 const RefereeRequestForm = () => {
   const { t } = useTranslation();
@@ -27,28 +30,72 @@ const RefereeRequestForm = () => {
     mode: "onChange",
     reValidateMode: "onChange",
     delayError: 1300,
-    defaultValues: formDefaultValues,
+    defaultValues: FORM_DEFAULT_VALUES,
     resolver: refereeRequestFormSchemaResolver,
   });
 
-  const selectedClub = methods.watch("team.club.id");
+  const { mutation: handleSubmitPreorder, isLoading: isLoadingPreorder } =
+    useMutation(setPreorder);
+
+  const watchNumberOfReferees = methods.watch("matchup.numberOfReferees");
 
   const { data: clubOptions } = useFetcher({
     fn: getClubs,
   });
 
-  const { data: teamOptions } = useFetcher({
+  // your club
+  const yourClubFieldPath = "personalData.info.team.club.id";
+  const selectedYourClub = methods.watch(yourClubFieldPath);
+  const { data: yourTeamOptions } = useFetcher({
     fn: getClubTeams,
-    fnProps: { clubId: selectedClub },
-    skip: !selectedClub,
+    fnProps: { clubId: selectedYourClub },
+    skip: !selectedYourClub,
   });
-
   useEffect(() => {
-    methods.resetField("team.id");
-  }, [methods, teamOptions]);
+    methods.resetField(yourClubFieldPath.replace(".club", ""));
+  }, [methods, yourTeamOptions]);
 
-  const onSubmit = (formData) => {
-    console.log(formData);
+  // home club
+  const homeClubFieldPath = "matchup.home.team.club.id";
+  const selectedHomeClub = methods.watch(homeClubFieldPath);
+  const { data: homeTeamOptions } = useFetcher({
+    fn: getClubTeams,
+    fnProps: { clubId: selectedHomeClub },
+    skip: !selectedHomeClub,
+  });
+  useEffect(() => {
+    methods.resetField(homeClubFieldPath.replace(".club", ""));
+  }, [methods, homeTeamOptions]);
+
+  // away club
+  const awayClubFieldPath = "matchup.away.team.club.id";
+  const selectedAwayClub = methods.watch("matchup.away.team.club.id");
+  const { data: awayTeamOptions } = useFetcher({
+    fn: getClubTeams,
+    fnProps: { clubId: selectedAwayClub },
+    skip: !selectedAwayClub,
+  });
+  useEffect(() => {
+    methods.resetField(awayClubFieldPath.replace(".club", ""));
+  }, [methods, awayTeamOptions]);
+
+  // submit
+  const onSubmit = async (formData) => {
+    const onSuccess = (response) => {
+      if (response?.paymentUrl) {
+        window.location.href = response?.paymentUrl;
+      }
+    };
+
+    const onError = (error) => {
+      toast.error(t(`messages:error.api.${error.status}`));
+    };
+
+    await handleSubmitPreorder({
+      payload: formData,
+      onSuccess,
+      onError,
+    });
   };
 
   const refereeCountOptions = [
@@ -62,100 +109,119 @@ const RefereeRequestForm = () => {
     },
   ];
 
-  const teamTypeOptions = [
-    {
-      value: "gentlemen",
-      label: t("field.gentlemen.main"),
-    },
-    {
-      value: "ladies",
-      label: t("field.ladies.main"),
-    },
-  ];
+  const SectionTitle = ({ title }) => {
+    return (
+      <Typography variant="h5" mb="6px">
+        {title}
+      </Typography>
+    );
+  };
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
-      <Select
-        id="club"
-        name="club.id"
-        label={t("field.club")}
-        placeholder={t("field.selectPlaceholder.makeAChoice")}
-        options={clubOptions}
-      />
-
-      <Input id="field" name="field" label={t("field.field.main")} />
-
-      <Radio
-        row
-        id="refereeCount"
-        name="referee.count"
-        label={t("field.referee.numberOfWhistlers")}
-        options={refereeCountOptions}
-        defaultValue={formDefaultValues.referee.count}
-      />
-
-      <FormControlWithLabel id="price-label" label={t("field.price.main")}>
-        <Typography aria-labelledby="price-label" fontWeight="bold">
-          {t("field.price.text", {
-            sign: "€",
-            netPrice: "37.19",
-            grossPrice: "45.00",
-          })}
-        </Typography>
-      </FormControlWithLabel>
-
-      <DatePicker
-        id="gameDate"
-        name="game.date"
-        label={t("field.match.dateAndTime")}
-      />
-
-      <Radio
-        row
-        id="teamType"
-        name="team.type"
-        label={t("field.team")}
-        options={teamTypeOptions}
-        defaultValue={formDefaultValues.team.type}
+      <SectionTitle title={t("global.personalData")} />
+      <Input
+        id="fullName"
+        name="personalData.info.name"
+        label={t("field.name.full")}
       />
 
       <Input
-        id="whistleRules"
-        name="rules"
-        label={t("field.whistleRules.main")}
+        id="email"
+        name="personalData.info.email"
+        label={t("field.email.main")}
       />
 
-      <FormRow col={2} label={t("field.clubAndTeam.main")}>
+      <Input
+        id="phoneNumber"
+        name="personalData.info.phoneNumber"
+        label={t("field.phone.main")}
+      />
+
+      <FormRow col={2} label={t("field.clubAndTeam.your")}>
         <Select
-          id="club"
-          name="team.club.id"
-          placeholder={t("field.selectPlaceholder.club")}
+          id="yourClub"
+          name="personalData.info.team.club.id"
+          placeholder={t("field.placeholder.club")}
           options={clubOptions}
         />
 
         <Select
-          id="team"
-          name="team.id"
-          placeholder={t("field.selectPlaceholder.team")}
-          options={teamOptions}
-          disabled={!selectedClub}
+          id="yourTeam"
+          name="personalData.info.team.id"
+          placeholder={t("field.placeholder.team")}
+          options={yourTeamOptions}
+          disabled={!selectedYourClub}
         />
       </FormRow>
 
-      <Input id="firstName" name="firstName" label={t("field.name.first")} />
+      <SectionTitle title={t("global.matchData")} />
+      <DatePicker
+        id="gameTime"
+        name="matchup.gameTime"
+        label={t("field.date.match.start")}
+        placeholder={t("field.placeholder.date.selectDateTime")}
+      />
 
-      <Input id="lastName" name="lastName" label={t("field.name.last")} />
+      <FormRow col={2} label={t("field.clubAndTeam.home")}>
+        <Select
+          id="homeClub"
+          name="matchup.home.team.club.id"
+          placeholder={t("field.placeholder.club")}
+          options={clubOptions}
+        />
 
-      <Input id="email" name="email" label={t("field.email")} />
+        <Select
+          id="homeTeam"
+          name="matchup.home.team.id"
+          placeholder={t("field.placeholder.team")}
+          options={homeTeamOptions}
+          disabled={!selectedHomeClub}
+        />
+      </FormRow>
 
-      <Input id="mobileNumber" name="mobileNumber" label={t("field.mobile")} />
+      <FormRow col={2} label={t("field.clubAndTeam.away")}>
+        <Select
+          id="awayClub"
+          name="matchup.away.team.club.id"
+          placeholder={t("field.placeholder.club")}
+          options={clubOptions}
+        />
 
-      <Input id="comments" name="comments" label={t("field.comments")} />
+        <Select
+          id="awayTeam"
+          name="matchup.away.team.id"
+          placeholder={t("field.placeholder.team")}
+          options={awayTeamOptions}
+          disabled={!selectedAwayClub}
+        />
+      </FormRow>
+
+      <Input id="field" name="matchup.field" label={t("field.field.main")} />
+
+      <Radio
+        row
+        id="numberOfReferees"
+        name="matchup.numberOfReferees"
+        label={t("field.referee.numberOfReferees")}
+        options={refereeCountOptions}
+      />
+
+      <FormControlWithLabel id="price-label" label={t("global.price.main")}>
+        <Typography aria-labelledby="price-label" fontWeight="bold">
+          {t("global.price.text", {
+            sign: "€",
+            ...getRefereePrices(watchNumberOfReferees),
+          })}
+        </Typography>
+      </FormControlWithLabel>
+
+      <Input id="comment" name="matchup.comment" label={t("field.comments")} />
 
       <Form.ActionsWrapper>
-        <Button type="submit" variant="contained">
+        <LoadingButton type="submit" loading={isLoadingPreorder}>
           {t("actions.submit")}
-        </Button>
+        </LoadingButton>
       </Form.ActionsWrapper>
     </Form>
   );

@@ -1,61 +1,65 @@
 const nl = {
-  error: {
-    yup: {
-      required: "Dit is een verplicht veld",
-      email: "Dit is geen geldige e-mail",
+  messages: {
+    error: {
+      yup: {
+        required: "Dit is een verplicht veld",
+        email: "Dit is geen geldig e-mailadres",
+      },
+      api: {
+        default: "Er is iets fout gegaan",
+        403: "Er is iets fout gegaan",
+        400: "Er klopt iets niet, controleer uw gegevens",
+      },
     },
   },
   translation: {
     actions: {
       submit: "Indienen",
     },
-    field: {
-      team: "Team",
-      club: "Club",
-      selectPlaceholder: {
-        makeAChoice: "Maak een keuze",
-        date: "Selecteer een datum",
-        team: "Selecteer team",
-        club: "Selecteer club",
-      },
-      field: {
-        main: "Veld",
-      },
+    global: {
+      personalData: "Persoonlijke Gegevens",
+      matchData: "Wedstrijdgegevens",
       price: {
         main: "Prijs",
         text: "{{sign}} {{netPrice}} exclusief BTW. {{sign}} {{grossPrice}} inclusief BTW.",
       },
+    },
+    field: {
+      placeholder: {
+        club: "Selecteer Club",
+        team: "Selecteer Team",
+        date: {
+          selectDateTime: "Selecteer Datum en Tijd",
+        },
+      },
+      name: {
+        main: "Naam",
+        full: "Volledige Naam",
+      },
+      email: {
+        main: "E-mail",
+      },
+      phone: {
+        main: "Telefoonnummer",
+      },
+      clubAndTeam: {
+        your: "Jouw Club en Team",
+        home: "Thuis Club en Team",
+        away: "Uit Club en Team",
+      },
+      date: {
+        match: {
+          start: "Starttijd Wedstrijd",
+        },
+      },
+      field: {
+        main: "Veld",
+      },
       referee: {
-        numberOfWhistlers: "Aantal fluiters",
-        plural_one: "Scheidsrechter",
-        plural_other: "Scheidsrechters",
+        numberOfReferees: "Aantal Scheidsrechters",
         plural_counter_one: "{{count}} Scheidsrechter",
         plural_counter_other: "{{count}} Scheidsrechters",
       },
-      match: {
-        main: "Tijdstip Aanvang Wedstrijd",
-        dateAndTime: "Datum En Tijdstip Aanvang Wedstrijd",
-      },
-      gentlemen: {
-        main: "Heren",
-      },
-      ladies: {
-        main: "Dames",
-      },
-      whistleRules: {
-        main: "Te fluiten team. Let op, vul hieronder de teams in die gefloten moeten worden. Niet je eigen wedstrijd.",
-      },
-      clubAndTeam: {
-        main: "Eigen Club En Team",
-        club: "Eigen Club",
-        team: "Eigen Team",
-      },
-      name: {
-        first: "Voornaam",
-        last: "Achternaam",
-      },
-      email: "E-mail",
-      mobile: "Mobiel nr",
       comments: "Opmerkingen",
     },
     refereeRequest: {
@@ -72,7 +76,7 @@ const nl = {
         "Na het invullen van het formulier krijgt u direct de mogelijkheid om via i-deal te betalen. Wanneer wij de betaling ontvangen hebben gaan wij aan de slag met uw aanvraag.",
     },
     refereeRequestSuccess: {
-      test: "referee request success translation nl",
+      test: "Scheidsrechterverzoek succesvol",
     },
   },
 };

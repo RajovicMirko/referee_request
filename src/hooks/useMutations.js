@@ -21,24 +21,18 @@ const useMutation = (fn) => {
       setIsLoading(true);
       const response = await fn(props, fetchOptions);
 
-      if (response?.Message) {
-        const msg = errorMessage ?? response?.Message;
-        await onError?.(msg);
-        setLocalErrorMessage(msg);
-        return msg;
+      if (!!onSuccess) {
+        const data = await onSuccess?.(response);
+        return data;
       } else {
-        if (!!onSuccess) {
-          const data = await onSuccess?.(response);
-          return data;
-        } else {
-          return response;
-        }
+        return response;
       }
     } catch (error) {
-      const msg = errorMessage ?? error.message;
-      await onError?.(msg);
+      const msg = error.error;
+
+      await onError?.(error);
+
       if (msg) setLocalErrorMessage(msg);
-      return msg;
     } finally {
       setIsLoading(false);
     }

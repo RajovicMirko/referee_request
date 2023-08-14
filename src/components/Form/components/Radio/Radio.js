@@ -27,12 +27,12 @@ const Radio = ({
       <Controller
         control={control}
         name={name}
+        defaultValue={defaultValue}
         render={({ field: { onChange, value } }) => {
           return (
             <RadioGroup
               row={row}
               aria-labelledby={FormControlWithLabel.getLabelId(id)}
-              defaultValue={defaultValue}
               value={value}
               onChange={onChange}
             >

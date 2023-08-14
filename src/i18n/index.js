@@ -24,7 +24,7 @@ const resources = {
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
-    ns: ["translation", "error"],
+    ns: ["translation", "messages"],
     defaultNS: "translation",
     resources,
     lng: lsGetItem(LS_KEYS.language) ?? FALLBACK_LANGUAGE_ID,

@@ -1,7 +1,7 @@
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Toastify from "./components/Toastify/Toastify";
 import I18NProvider from "./i18n";
-
 import RouterProvider from "./router";
 import MUIProvider from "./style/MUIProvider";
 
@@ -12,6 +12,7 @@ function App() {
         <I18NProvider>
           <MUIProvider>
             <RouterProvider />
+            <Toastify />
           </MUIProvider>
         </I18NProvider>
       </LocalizationProvider>

@@ -1,13 +1,14 @@
 const generateQueryParams = (obj) => {
-  if (!obj) return;
-  let allStrings = [];
   let tmpResultString = "";
+
+  if (!obj) return tmpResultString;
+  let allStrings = [];
 
   Object.entries(obj).forEach(([key, value]) => {
     allStrings.push(`${key}=${JSON.stringify(value)}`);
   });
 
-  if (allStrings?.length) {
+  if (!!allStrings?.length) {
     tmpResultString = `?${allStrings.join("&")}`;
   }
 
@@ -15,14 +16,22 @@ const generateQueryParams = (obj) => {
 };
 
 export const fetcher = async (url, { method = "GET", body, query }) => {
-  const urlWithQuery = url + generateQueryParams(query);
+  const urlWithQuery = `/api${url}${generateQueryParams(query)}`;
+
+  const headers = new Headers({
+    "Content-Type": "application/json",
+  });
 
   const response = await fetch(urlWithQuery, {
     method,
+    headers,
     body: JSON.stringify(body),
   });
 
-  const result = response.json();
-
-  return result;
+  if (response.status === 200) {
+    const result = await response.json();
+    return result;
+  } else {
+    throw response;
+  }
 };

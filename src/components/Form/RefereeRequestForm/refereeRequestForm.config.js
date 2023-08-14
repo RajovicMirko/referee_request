@@ -4,30 +4,71 @@ import { date, number, object, setLocale, string } from "yup";
 
 setLocale(yupLocaleConfig);
 
-const schema = object().shape({
+export const FORM_DEFAULT_VALUES = {
+  matchup: {
+    gameTime: new Date(),
+    home: {
+      team: {
+        club: {
+          id: 146,
+        },
+      },
+    },
+    away: {
+      team: {
+        club: {
+          id: 147,
+        },
+      },
+    },
+    field: "test field name",
+    comment: "test some comment",
+    numberOfReferees: 1,
+  },
+  personalData: {
+    discountCode: null,
+    info: {
+      name: "Mirko",
+      email: "test@gmail.com",
+      phoneNumber: "123321",
+      team: {
+        club: {
+          id: 145,
+        },
+      },
+    },
+  },
+};
+
+const teamSchema = object().shape({
+  id: number().required(),
   club: object().shape({
     id: number().required(),
   }),
-  field: string().required(),
-  referee: object().shape({
-    count: number().required(),
+});
+
+const teamParentSchema = object().shape({
+  team: teamSchema,
+});
+
+const schema = object().shape({
+  matchup: object().shape({
+    gameTime: date().required(),
+    home: teamParentSchema,
+    away: teamParentSchema,
+    field: string().required(),
+    numberOfReferees: number().required(),
+    comment: string().required(),
   }),
-  game: object().shape({
-    date: date().required(),
-  }),
-  team: object().shape({
-    id: number().required(),
-    type: string().required(),
-    club: object().shape({
-      id: number().required(),
+  personalData: object().shape({
+    discountCode: string().optional().nullable(),
+    info: object().shape({
+      email: string().email().required(),
+      name: string().required(),
+      phoneNumber: string().required(),
+      team: teamSchema,
     }),
   }),
-  rules: string().required(),
-  firstName: string().required(),
-  lastName: string().required(),
-  email: string().email().required(),
-  mobileNumber: string().required(),
-  comments: string().optional(),
 });
 
 export const refereeRequestFormSchemaResolver = yupResolver(schema);

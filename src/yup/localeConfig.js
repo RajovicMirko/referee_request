@@ -1,8 +1,8 @@
 export const yupLocaleConfig = {
   mixed: {
-    required: "yup.required",
+    required: "messages:error.yup.required",
   },
   string: {
-    email: "yup.email",
+    email: "messages:error.yup.email",
   },
 };

@@ -6,7 +6,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import FormControlWithLabel from "../FormControlWithLabel/FormControlWithLabel";
 
-const DatePicker = ({ id, name, label, disableBottomGutter }) => {
+const DatePicker = ({ id, name, label, placeholder, disableBottomGutter }) => {
   const { t } = useTranslation();
   const {
     control,
@@ -53,7 +53,7 @@ const DatePicker = ({ id, name, label, disableBottomGutter }) => {
                   },
                   readOnly: true,
                   onClick: onClick,
-                  placeholder: t("field.selectPlaceholder.date"),
+                  placeholder,
                 },
               }}
             />

@@ -56,12 +56,13 @@ const components = {
           },
         });
 
+        console.log(ownerState?.error, ownerState);
         const errorStyle = getConditionStyle(ownerState?.error, {
           "& .MuiInputBase-root, fieldset": {
             borderColor: `${theme.palette.error.main} !important`,
-            color: `${theme.palette.error.main} !important`,
+            color: `${theme.palette.error.main}`,
             button: {
-              color: "inherit !important",
+              color: "inherit",
             },
           },
         });

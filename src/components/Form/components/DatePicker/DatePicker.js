@@ -5,28 +5,32 @@ import dayjs from "dayjs";
 import { Controller, useFormContext } from "react-hook-form";
 import FormControlWithLabel from "../FormControlWithLabel/FormControlWithLabel";
 
-const CustomInput = ({ placeholder, onClick, ...rest }) => (
-  <DateTimeField
-    {...rest}
-    format="DD.MM.YYYY HH:mm"
-    slots={{ textField: TextField }}
-    slotProps={{
-      textField: {
-        fullWidth: true,
-        size: "small",
-        inputProps: {
-          className: "date-picker-field",
+const CustomDatePickerInput = ({ placeholder, onClick, inputRef, ...rest }) => {
+  return (
+    <DateTimeField
+      {...rest}
+      format="DD.MM.YYYY HH:mm"
+      slots={{ textField: TextField }}
+      slotProps={{
+        textField: {
+          fullWidth: true,
+          size: "small",
+          inputProps: {
+            className: "date-picker-field",
+          },
+          InputProps: {
+            endAdornment: <CalendarIcon />,
+          },
+          readOnly: true,
+          onClick: onClick,
+          placeholder,
+          inputRef,
         },
-        InputProps: {
-          endAdornment: <CalendarIcon />,
-        },
-        readOnly: true,
-        onClick: onClick,
-        placeholder,
-      },
-    }}
-  />
-);
+      }}
+    />
+  );
+};
+
 const DatePicker = ({ id, name, label, placeholder, disableBottomGutter }) => {
   const {
     control,
@@ -59,7 +63,7 @@ const DatePicker = ({ id, name, label, placeholder, disableBottomGutter }) => {
               disablePast
               aria-labelledby={FormControlWithLabel.getLabelId(id)}
               inputRef={ref}
-              slots={{ field: CustomInput }}
+              slots={{ field: CustomDatePickerInput }}
               slotProps={{
                 field: {
                   placeholder,

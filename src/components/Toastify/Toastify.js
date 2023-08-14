@@ -14,7 +14,6 @@ const Toastify = () => {
         limit={3}
         closeButton={false}
       />
-      ;
     </ToastContainerWrapper>
   );
 };

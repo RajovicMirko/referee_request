@@ -3,11 +3,31 @@ import { TextField } from "@mui/material";
 import { DateTimeField, MobileDateTimePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { Controller, useFormContext } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import FormControlWithLabel from "../FormControlWithLabel/FormControlWithLabel";
 
+const CustomInput = ({ placeholder, onClick, ...rest }) => (
+  <DateTimeField
+    {...rest}
+    format="DD.MM.YYYY HH:mm"
+    slots={{ textField: TextField }}
+    slotProps={{
+      textField: {
+        fullWidth: true,
+        size: "small",
+        inputProps: {
+          className: "date-picker-field",
+        },
+        InputProps: {
+          endAdornment: <CalendarIcon />,
+        },
+        readOnly: true,
+        onClick: onClick,
+        placeholder,
+      },
+    }}
+  />
+);
 const DatePicker = ({ id, name, label, placeholder, disableBottomGutter }) => {
-  const { t } = useTranslation();
   const {
     control,
     formState: { errors },
@@ -31,34 +51,6 @@ const DatePicker = ({ id, name, label, placeholder, disableBottomGutter }) => {
             onChange?.(obj.$d);
           };
 
-          const CustomInput = ({ onChange, onClick, value }) => (
-            <DateTimeField
-              onChange={onChange}
-              onClick={onClick}
-              value={value}
-              format="DD.MM.YYYY HH:mm"
-              slots={{ textField: TextField }}
-              slotProps={{
-                textField: {
-                  inputRef: ref,
-                  fullWidth: true,
-                  size: "small",
-                  id,
-                  name,
-                  inputProps: {
-                    className: "date-picker-field",
-                  },
-                  InputProps: {
-                    endAdornment: <CalendarIcon />,
-                  },
-                  readOnly: true,
-                  onClick: onClick,
-                  placeholder,
-                },
-              }}
-            />
-          );
-
           return (
             <MobileDateTimePicker
               id={id}
@@ -66,7 +58,13 @@ const DatePicker = ({ id, name, label, placeholder, disableBottomGutter }) => {
               ampm={false}
               disablePast
               aria-labelledby={FormControlWithLabel.getLabelId(id)}
+              inputRef={ref}
               slots={{ field: CustomInput }}
+              slotProps={{
+                field: {
+                  placeholder,
+                },
+              }}
               value={value ? dayjs(value) : null}
               onChange={handleChange}
             />

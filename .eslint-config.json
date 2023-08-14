@@ -1,0 +1,13 @@
+{
+  "eslintConfig": {
+    "extends": ["react-app", "airbnb"],
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "paths": ["./"],
+          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        }
+      }
+    }
+  }
+}

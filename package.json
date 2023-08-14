@@ -1,5 +1,5 @@
 {
-  "name": "goe-referee-request-fe",
+  "name": "referee_request",
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:8080/",

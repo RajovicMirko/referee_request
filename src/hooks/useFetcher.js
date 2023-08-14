@@ -7,7 +7,6 @@ const useFetcher = ({
   fnProps,
   onSuccess,
   onError,
-  errorMessage,
   skip = false,
   skipMemo = false,
 }) => {
@@ -39,23 +38,21 @@ const useFetcher = ({
       setIsLoading(true);
       const response = await fn(localFetchProps);
 
-      if (response?.Message) {
-        onError?.(response?.Message);
-        if (errorMessage) setLocalErrorMessage(response?.Message);
+      if (!!onSuccess) {
+        setMemoizedData(onSuccess?.(response));
       } else {
-        if (!!onSuccess) {
-          setMemoizedData(onSuccess?.(response));
-        } else {
-          setMemoizedData(response);
-        }
+        setMemoizedData(response);
       }
     } catch (error) {
-      onError?.(errorMessage ?? error?.message);
-      if (errorMessage) setLocalErrorMessage(errorMessage);
+      const msg = error.error;
+
+      await onError?.(error);
+
+      if (msg) setLocalErrorMessage(msg);
     } finally {
       setIsLoading(false);
     }
-  }, [errorMessage, fn, localFetchProps, onError, onSuccess, skipMemo]);
+  }, [fn, localFetchProps, onError, onSuccess, skipMemo]);
 
   // fetch data
   useEffect(() => {

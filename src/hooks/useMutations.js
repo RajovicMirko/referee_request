@@ -11,7 +11,6 @@ const useMutation = (fn) => {
   const mutation = async ({
     onSuccess,
     onError,
-    errorMessage,
     skip,
     fetchOptions,
     ...props

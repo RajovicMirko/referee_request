@@ -8,9 +8,6 @@ export const ButtonStyled = styled(Button, { shouldForwardProp })(
     const loadingStyle = loading
       ? {
           pointerEvents: "none",
-          ":hover": {
-            backgroundColor: theme.palette.primary.main,
-          },
         }
       : {};
 

@@ -9,10 +9,17 @@ const LoadingButton = ({
   loading = false,
   children,
   variant = "contained",
+  disabled,
   ...rest
 }) => {
   return (
-    <ButtonStyled type={type} variant={variant} loading={loading} {...rest}>
+    <ButtonStyled
+      type={type}
+      variant={variant}
+      loading={loading}
+      disabled={loading || disabled}
+      {...rest}
+    >
       {loading && <CircularProgressStyled />}
       <TextWrapper loading={loading}>{children}</TextWrapper>
     </ButtonStyled>

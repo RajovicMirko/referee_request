@@ -205,9 +205,14 @@ const RefereeRequestForm = () => {
         name="matchup.numberOfReferees"
         label={t("field.referee.numberOfReferees")}
         options={refereeCountOptions}
+        disableBottomGutter
       />
 
-      <FormControlWithLabel id="price-label" label={t("global.price.main")}>
+      <FormControlWithLabel
+        id="price-label"
+        label={t("global.price.main")}
+        disableBottomGutter
+      >
         <Typography aria-labelledby="price-label" fontWeight="bold">
           {t("global.price.text", {
             sign: "€",

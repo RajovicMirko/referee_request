@@ -6,36 +6,20 @@ setLocale(yupLocaleConfig);
 
 export const FORM_DEFAULT_VALUES = {
   matchup: {
-    gameTime: new Date(),
-    home: {
-      team: {
-        club: {
-          id: 146,
-        },
-      },
-    },
-    away: {
-      team: {
-        club: {
-          id: 147,
-        },
-      },
-    },
-    field: "test field name",
-    comment: "test some comment",
+    gameTime: null,
+    home: null,
+    away: null,
+    field: "",
+    comment: "",
     numberOfReferees: 1,
   },
   personalData: {
     discountCode: null,
     info: {
-      name: "Mirko",
-      email: "test@gmail.com",
-      phoneNumber: "123321",
-      team: {
-        club: {
-          id: 145,
-        },
-      },
+      name: "",
+      email: "",
+      phoneNumber: "",
+      team: null,
     },
   },
 };

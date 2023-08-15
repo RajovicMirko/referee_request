@@ -5,31 +5,26 @@ import dayjs from "dayjs";
 import { Controller, useFormContext } from "react-hook-form";
 import FormControlWithLabel from "../FormControlWithLabel/FormControlWithLabel";
 
-const CustomDatePickerInput = ({ placeholder, onClick, inputRef, ...rest }) => {
-  return (
-    <DateTimeField
-      {...rest}
-      format="DD.MM.YYYY HH:mm"
-      slots={{ textField: TextField }}
-      slotProps={{
-        textField: {
-          fullWidth: true,
-          size: "small",
-          inputProps: {
-            className: "date-picker-field",
-          },
-          InputProps: {
-            endAdornment: <CalendarIcon />,
-          },
-          readOnly: true,
-          onClick: onClick,
-          placeholder,
-          inputRef,
+const CustomDatePickerInput = (params) => (
+  <DateTimeField
+    {...params}
+    format="DD.MM.YYYY HH:mm"
+    slots={{ textField: TextField }}
+    slotProps={{
+      textField: {
+        readOnly: true,
+        fullWidth: true,
+        size: "small",
+        inputProps: {
+          className: "date-picker-field",
         },
-      }}
-    />
-  );
-};
+        InputProps: {
+          endAdornment: <CalendarIcon />,
+        },
+      },
+    }}
+  />
+);
 
 const DatePicker = ({ id, name, label, placeholder, disableBottomGutter }) => {
   const {
@@ -50,9 +45,9 @@ const DatePicker = ({ id, name, label, placeholder, disableBottomGutter }) => {
         control={control}
         name={name}
         render={({ field: { onChange, value, ref } }) => {
-          const handleChange = (obj) => {
+          const handleChange = (dateObject) => {
             trigger(name);
-            onChange?.(obj.$d);
+            onChange?.(dateObject?.$d ?? null);
           };
 
           return (
@@ -64,11 +59,7 @@ const DatePicker = ({ id, name, label, placeholder, disableBottomGutter }) => {
               aria-labelledby={FormControlWithLabel.getLabelId(id)}
               inputRef={ref}
               slots={{ field: CustomDatePickerInput }}
-              slotProps={{
-                field: {
-                  placeholder,
-                },
-              }}
+              slotProps={{ field: { placeholder, ref } }}
               value={value ? dayjs(value) : null}
               onChange={handleChange}
             />
